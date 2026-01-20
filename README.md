@@ -23,7 +23,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+GraphQL Yoga + Apollo Federation subgraph service (TypeScript).
 
 ## Project setup
 
@@ -34,15 +34,14 @@ $ pnpm install
 ## Compile and run the project
 
 ```bash
-# development
+# start (ts-node)
 $ pnpm run start
 
-# watch mode
+# dev (ts-node)
 $ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
 ```
+
+GraphQL endpoint: `http://localhost:3000/graphql`
 
 ## Run tests
 
