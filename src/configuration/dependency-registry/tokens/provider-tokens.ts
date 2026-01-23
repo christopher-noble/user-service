@@ -1,4 +1,5 @@
-export const ProviderTokens = {
-  GetHelloProvider: 'GetHelloProvider',
+export enum ProviderTokens {
+  GetHelloProvider = 'GetHelloProvider',
+  CreateUserProvider = 'CreateUserProvider',
 };
 

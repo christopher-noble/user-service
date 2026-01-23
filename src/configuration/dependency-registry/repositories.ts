@@ -1,14 +1,14 @@
-// import { Global, Module } from "@nestjs/common";
+import type { DependencyContainer } from 'tsyringe';
+import { container } from 'tsyringe';
 
-// infrastructure/repositories/repositories.module.ts
-// @Global() // Optional: Makes repositories available everywhere without re-importing
-// @Module({
-//   providers: [
-//     {
-//       provide: 'USER_REPOSITORY_PORT',
-//       useClass: SqlUserRepository,
-//     },
-//   ],
-//   exports: ['USER_REPOSITORY_PORT', 'ORDER_REPOSITORY_PORT'],
-// })
-// export class RepositoriesModule {}
+import type { UserRepositoryPort } from '../../domain/repositories/user-repository.port.js';
+import { UserRepositoryAdapter } from '../../infrastructure/repositories/user/user-repository.adapter.js';
+import { RepositoryTokens } from './tokens/repository-tokens.js';
+
+export function registerRepositories(registry: DependencyContainer = container) {
+  registry.register<UserRepositoryPort>(RepositoryTokens.UserRepository, {
+    useClass: UserRepositoryAdapter,
+  });
+
+  return registry;
+}

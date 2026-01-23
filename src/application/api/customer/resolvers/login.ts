@@ -8,9 +8,9 @@ export interface AuthPayload {
 };
 
 export const loginResolver = {
-  async login(_: unknown, args: LoginInput): Promise<AuthPayload> {
+  async login(_: unknown, args: { input: LoginInput }): Promise<AuthPayload> {
     // TODO: Replace with real auth + user lookup
-    const { email } = args;
+    const { email } = args.input;
 
     return { token: `token-for:${email}` };
   },
