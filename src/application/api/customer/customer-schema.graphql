@@ -11,7 +11,8 @@ type Query {
 type Mutation {
   login(input: LoginInput!): AuthPayload!
   logout: Boolean!
-  createUser(input: CreateUserInput!): User!
+  signUp(input: SignUpInput!): User!
+  joinWaitlist(input: JoinWaitlistInput!): User!
 }
 
 input LoginInput {
@@ -23,17 +24,32 @@ type AuthPayload {
   token: String!
 }
 
+enum UserAccountStatus {
+  QUEUED
+  ACTIVE
+  INACTIVE
+}
+
 type User {
   id: ID!
   firstName: String!
   lastName: String!
   primaryEmail: String!
   secondaryEmail: String
+  accountStatus: UserAccountStatus
+  createdAt: String!
+  updatedAt: String!
 }
 
-input CreateUserInput {
+input SignUpInput {
   firstName: String!
   lastName: String!
   primaryEmail: String!
   secondaryEmail: String
+}
+
+input JoinWaitlistInput {
+  firstName: String!
+  lastName: String!
+  email: String!
 }

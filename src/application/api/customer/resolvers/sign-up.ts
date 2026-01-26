@@ -1,8 +1,10 @@
+import { container } from 'tsyringe';
+
 import { ProviderTokens } from '../../../../configuration/dependency-registry/tokens/provider-tokens.js';
 import type { CreateUserProviderPort } from '../../../../domain/providers/create-user/create-user.port.js';
 import { CustomerContext } from '../customer-context.js';
 
-export interface CreateUserArgs {
+export interface SignUpArgs {
   input: {
     firstName: string;
     lastName: string;
@@ -11,16 +13,16 @@ export interface CreateUserArgs {
   };
 }
 
-export const createUserResolver = {
-  async createUser(
+export const signUpResolver = {
+  async signUp(
     _: unknown,
-    args: CreateUserArgs,
-    context: CustomerContext,
+    args: SignUpArgs,
+    _context: CustomerContext,
   ) {
-    const provider = context.container.resolve<CreateUserProviderPort>(
+    const createUserProvider = container.resolve<CreateUserProviderPort>(
       ProviderTokens.CreateUserProvider,
     );
 
-    return provider.execute(args.input);
+    return createUserProvider.signUpUser(args.input);
   },
 };

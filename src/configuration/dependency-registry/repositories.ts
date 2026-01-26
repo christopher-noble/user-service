@@ -1,6 +1,5 @@
-import type { DependencyContainer } from 'tsyringe';
-import { container } from 'tsyringe';
 
+import { container, DependencyContainer } from 'tsyringe';
 import type { UserRepositoryPort } from '../../domain/repositories/user-repository.port.js';
 import { UserRepositoryAdapter } from '../../infrastructure/repositories/user/user-repository.adapter.js';
 import { RepositoryTokens } from './tokens/repository-tokens.js';

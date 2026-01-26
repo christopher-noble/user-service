@@ -1,13 +1,15 @@
-import { loginResolver } from './login.js';
-import { logoutResolver } from './logout.js';
-import { createUserResolver } from './create-user.js';
+import { loginResolver } from './log-in.js';
+import { logoutResolver } from './log-out.js';
+import { signUpResolver } from './sign-up.js';
+import { joinWaitlistResolver } from './join-waitlist.js';
 
 export const resolvers = {
   Query: {
-    hello: () => 'Hey',
+    hello: () => 'Test',
   },
   Mutation: {
-    createUser: createUserResolver.createUser,
+    signUp: signUpResolver.signUp,
+    joinWaitlist: joinWaitlistResolver.joinWaitlist,
     login: loginResolver.login,
     logout: logoutResolver.logout,
   }

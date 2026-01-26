@@ -1,51 +1,49 @@
 import { v7 as uuidv7 } from 'uuid';
-import { injectable } from 'tsyringe';
-import type { Repository } from 'typeorm';
-
-import type { User } from '../../../domain/entities/user.js';
+import type { User, UserAccountStatus } from '../../../domain/entities/user.js';
 import type { UserRepositoryPort } from '../../../domain/repositories/user-repository.port.js';
-import { AppDataSource } from '../../../configuration/database/data-source.js';
-import { UserSchema } from './user-repository.schema.js';
+import { prisma } from '../../../configuration/database/index.js';
+import { injectable } from 'tsyringe';
+import type { User as PrismaUser } from '@prisma/client';
 
 @injectable()
 export class UserRepositoryAdapter implements UserRepositoryPort {
-  private readonly repository: Repository<UserSchema>;
-
-  constructor() {
-    this.repository = AppDataSource.getRepository(UserSchema);
-  }
-
   async create(user: Omit<User, 'id'>): Promise<User> {
-    const entity = this.repository.create({
-      id: uuidv7(),
-      ...user,
-      secondaryEmail: user.secondaryEmail ?? null,
+    const created = await prisma.user.create({
+      data: {
+        id: uuidv7(),
+        firstName: user.firstName,
+        lastName: user.lastName,
+        primaryEmail: user.primaryEmail,
+        secondaryEmail: user.secondaryEmail,
+        accountStatus: user.accountStatus,
+      },
     });
 
-    const saved = await this.repository.save(entity);
-
-    return {
-      id: saved.id,
-      firstName: saved.firstName,
-      lastName: saved.lastName,
-      primaryEmail: saved.primaryEmail,
-      secondaryEmail: saved.secondaryEmail,
-    };
+    return this.mapSchemaUserToDomain(created);
   }
 
   async findById(id: string): Promise<User | null> {
-    const entity = await this.repository.findOne({ where: { id } });
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
 
-    if (!entity) {
+    if (!user) {
       return null;
     }
 
+    return this.mapSchemaUserToDomain(user);
+  }
+
+  private mapSchemaUserToDomain(user: PrismaUser): User {
     return {
-      id: entity.id,
-      firstName: entity.firstName,
-      lastName: entity.lastName,
-      primaryEmail: entity.primaryEmail,
-      secondaryEmail: entity.secondaryEmail,
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      primaryEmail: user.primaryEmail,
+      secondaryEmail: user.secondaryEmail,
+      accountStatus: user.accountStatus as UserAccountStatus,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
   }
 }
