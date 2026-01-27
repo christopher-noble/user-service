@@ -1,9 +1,10 @@
 import { v7 as uuidv7 } from 'uuid';
-import type { User, UserAccountStatus } from '../../../domain/entities/user.js';
+import { User, UserAccountStatus } from '../../../domain/entities/user.js';
 import type { UserRepositoryPort } from '../../../domain/repositories/user-repository.port.js';
 import { prisma } from '../../../configuration/database/index.js';
 import { injectable } from 'tsyringe';
-import type { User as PrismaUser } from '@prisma/client';
+import type { User as SchemaUser } from '@prisma/client';
+import { enumFromKeyStringOrThrow } from '../../../lib/enum-utils.js';
 
 @injectable()
 export class UserRepositoryAdapter implements UserRepositoryPort {
@@ -34,14 +35,17 @@ export class UserRepositoryAdapter implements UserRepositoryPort {
     return this.mapSchemaUserToDomain(user);
   }
 
-  private mapSchemaUserToDomain(user: PrismaUser): User {
+  private mapSchemaUserToDomain(user: SchemaUser): User {
     return {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       primaryEmail: user.primaryEmail,
       secondaryEmail: user.secondaryEmail,
-      accountStatus: user.accountStatus as UserAccountStatus,
+      accountStatus: enumFromKeyStringOrThrow(
+        UserAccountStatus,
+        user.accountStatus,
+      ),
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

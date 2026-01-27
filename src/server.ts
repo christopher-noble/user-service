@@ -8,7 +8,6 @@ import 'reflect-metadata';
 import { createContext } from './application/api/customer/customer-context.js';
 import { resolvers } from './application/api/customer/resolvers/index.js';
 import { registerDependencies } from './configuration/dependency-registry/index.js';
-import { initDatabase } from './configuration/database/index.js';
 
 const typeDefs = parse(
   readFileSync(
@@ -23,7 +22,6 @@ const typeDefs = parse(
 const schema = buildSubgraphSchema({ typeDefs, resolvers });
 
 async function bootstrap() {
-  await initDatabase();
   registerDependencies();
 
   const yoga = createYoga({
